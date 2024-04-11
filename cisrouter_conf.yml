@@ -1,0 +1,36 @@
+---
+- hosts: Ciscorouter
+  gather_facts: no
+  connection: 
+
+  tasks:
+    - name: OBTAIN LOGIN INFORMATION
+      include_vars: secrets.yml
+
+    - name: CONFIGURE PROVIDER
+      set_fact:
+        provider:
+          username: cisco
+          password: cisco
+
+    - name: SET HOSTNAME
+      ios_config:
+        provider: "{{ provider }}"
+        lines:
+          - hostname 7200-Reyesrouter
+
+    - name: SET IP ADDRESS
+      ios_config:
+        provider: "{{ provider }}"
+        authorize: yes
+        parents: "interface FastEthernet0/1"
+        lines:
+          - ip address 192.168.56.124 255.255.255.0
+          - no shutdown
+
+    - name: SAVE & BACKUP CONFIGURATION
+      ios_config:
+        provider: "{{ provider }}"
+        authorize: yes
+        save: yes
+        backup: yes
