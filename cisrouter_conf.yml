@@ -1,36 +1,44 @@
 ---
-- hosts: Ciscorouter
+- name: Configure Cisco Router
+  hosts: router1
   gather_facts: no
-  connection: 
-
+  connection: network_cli
   tasks:
-    - name: OBTAIN LOGIN INFORMATION
-      include_vars: secrets.yml
-
-    - name: CONFIGURE PROVIDER
-      set_fact:
-        provider:
-          username: cisco
-          password: cisco
-
-    - name: SET HOSTNAME
+    - name: Configure hostname
       ios_config:
-        provider: "{{ provider }}"
         lines:
-          - hostname 7200-Reyesrouter
+          - hostname {{ router_hostname }}
 
-    - name: SET IP ADDRESS
+    - name: Configure interface
       ios_config:
-        provider: "{{ provider }}"
-        authorize: yes
-        parents: "interface FastEthernet0/1"
         lines:
-          - ip address 192.168.56.124 255.255.255.0
-          - no shutdown
+          - interface FastEthernet0/0
+          - ip address 192.168.56.107 255.255.255.0
+          - description "GNS3 Server"
 
-    - name: SAVE & BACKUP CONFIGURATION
+    - name: Save configuration
       ios_config:
-        provider: "{{ provider }}"
-        authorize: yes
-        save: yes
-        backup: yes
+        lines:
+          - write memory
+          
+- name: Configure Cisco Router
+  hosts: switch1
+  gather_facts: no
+  connection: network_cli
+  tasks:
+    - name: Configure hostname
+      ios_config:
+        lines:
+          - hostname {{ router_hostname }}
+
+    - name: Configure interface
+      ios_config:
+        lines:
+          - interface Ethernet0
+          - ip address {{ ip_address }} {{ subnet_mask }}
+          - description {{ interface_description }}
+
+    - name: Save configuration
+      ios_config:
+        lines:
+          - write memory
