@@ -4,17 +4,22 @@
   gather_facts: no
   connection: network_cli
   tasks:
-    - name: Configure hostname
+    - name: Configure hostname & passwords
       ios_config:
         lines:
           - hostname R1
+          - enable secret cisco
+          - no ip domain-lookup
+          - line vty 0 4
+          - password cisco
 
     - name: Configure interface
       ios_config:
         lines:
           - interface FastEthernet0/0
           - ip address 192.168.56.107 255.255.255.0
-          - description "GNS3 Server"
+          - description GNS3 Server
+          - end
 
     - name: Save configuration
       ios_config:
