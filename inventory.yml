@@ -3,8 +3,6 @@ all:
   hosts:
     router1:
       ansible_host=192.168.56.114
-    switch1:
-      ansible_host=192.168.56.115
     Workstation:
       ansible_host=192.168.56.104
 
