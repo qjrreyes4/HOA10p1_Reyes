@@ -12,6 +12,7 @@
           - no ip domain-lookup
           - line vty 0 4
           - password cisco
+          - login
 
     - name: Configure interface
       ios_config:
