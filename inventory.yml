@@ -1,44 +1,11 @@
 ---
-- name: Configure Cisco Router
-  hosts: router1
-  gather_facts: no
-  connection: network_cli
-  tasks:
-    - name: Configure hostname
-      ios_config:
-        lines:
-          - hostname {{ router_hostname }}
+all:
+  hosts:
+    router1:
+      ansible_host=192.168.56.114
+    switch1:
+      ansible_host=192.168.56.115
+    Workstation:
+      ansible_host=192.168.56.104
 
-    - name: Configure interface
-      ios_config:
-        lines:
-          - interface FastEthernet0/0
-          - ip address 192.168.56.107 255.255.255.0
-          - description "GNS3 Server"
-
-    - name: Save configuration
-      ios_config:
-        lines:
-          - write memory
-          
-- name: Configure Cisco Router
-  hosts: switch1
-  gather_facts: no
-  connection: network_cli
-  tasks:
-    - name: Configure hostname
-      ios_config:
-        lines:
-          - hostname {{ router_hostname }}
-
-    - name: Configure interface
-      ios_config:
-        lines:
-          - interface Ethernet0
-          - ip address {{ ip_address }} {{ subnet_mask }}
-          - description {{ interface_description }}
-
-    - name: Save configuration
-      ios_config:
-        lines:
-          - write memory
+      
